@@ -3,5 +3,9 @@
 	Handles the application loading and processing.
 */
 $("document").ready(function(){
-	console.log("App.js linked");
+	
+	firebase.initializeApp(Config.firebase);
+
+	//TestData.init();
+	//TestData.storeTestData();
 });
