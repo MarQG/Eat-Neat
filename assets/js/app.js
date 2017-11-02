@@ -22,13 +22,21 @@ $("document").ready(function(){
 			templateUrl: '../views/search-content.html'
 		},
 		],
+		favorites: [{
+			selector: "#title",
+			templateUrl: '../views/favorite-title.html'
+		}, {
+			selector: "#content",
+			templateUrl: '../views/favorite-content.html'
+		},
+		],
 
 		defaultView: {
 			view: 'home'
 		}
-};
+	};
 
-var via = new Via();
+	var via = new Via();
 
-via.init(views);
+	via.init(views);
 });
