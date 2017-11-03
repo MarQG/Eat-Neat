@@ -7,6 +7,7 @@ $("document").ready(function(){
 	firebase.initializeApp(Config.firebase);
 
 	// ===== Scripts ======
+	//console.log(Api);
 	Api.init();
 	//TestData.init();
 	//TestData.storeTestData();

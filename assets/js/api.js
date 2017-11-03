@@ -3,6 +3,7 @@
 	Handles loading the Apis and processing them.
 */
 
+
 var Api  = (function(){
 
 	// ====== Private Varaibles ======
@@ -42,7 +43,7 @@ var Api  = (function(){
 		Takes a search term from the user and passes it into our Yummly API and returns a recipe object
 	*/
 	function yummlyListSearch(search, allergyFilters){
-
+		console.log("ran yummyListSearch");
 		if(search != ""){
 			var newSearch = yumListURL + search;
 			if(allergyFilters != []){
@@ -58,7 +59,7 @@ var Api  = (function(){
 				searchDiv.html( data.attribution.html +
 					'<p>' + data.criteria.q + '</p>' );
 
-				$("#search").append(searchDiv);
+				$("#search-title").append(searchDiv);
 
 				$.each(data.matches, function(index, value){
 					var recipeItem = $("<li>");
@@ -70,7 +71,7 @@ var Api  = (function(){
 						'<p>Rating: ' + value.rating + '</p>' +
 						'<p>Total Time: ' + ((value.totalTimeInSeconds / 60 )/ 60 ).toFixed(1) + ' Hours</p>' +
 						'<img src="' + value.imageUrlsBySize[90] + '">');
-					$("#search").append(recipeItem);
+					$("#search-title").append(recipeItem);
 				})
 
 				$(".recipe-list").on("click", function(){
@@ -114,14 +115,13 @@ var Api  = (function(){
 				if(data.instructions != null){
 					$.each(data.extendedIngredients, function(index, value){
 						var div = $("<div>");
-						div.html("<img src='" + value.image + "'>"+
-							"<p>" + value.originalString + "</p>"+
-							"<p>Locationa: " + value.aisle + "</p>");
-						$("#search").append(div);
+						div.html(
+							"<p>" + value.originalString + "</p>");
+						$("#search-title").append(div);
 					})
-					$("#search").append(data.instructions);
+					$("#search-title").append(data.instructions);
 				} else {
-					$("#search").append("<a href='" + url + "''>Check out this recipe here.</a>" );
+					$("#search-title").append("<a href='" + url + "''>Check out this recipe here.</a>" );
 				}
 			})
 	}
@@ -129,6 +129,7 @@ var Api  = (function(){
 	return{
 
 		init: function(){
+				//console.log("ran API");
 				userSearch = "chicken pasta";
 
 				//yummlyListSearch(userSearch,userFilters);
@@ -137,6 +138,7 @@ var Api  = (function(){
 		}
 	}
 })();
+
 
 // $("document").ready(function(){
 // 	//console.log("Api.js linked");
