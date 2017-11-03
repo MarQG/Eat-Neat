@@ -6,9 +6,12 @@ $("document").ready(function(){
 	
 	firebase.initializeApp(Config.firebase);
 
+	// ===== Scripts ======
+	Api.init();
 	//TestData.init();
 	//TestData.storeTestData();
 	console.log("App.js linked");
+
 
 	var views = {
 		home: [
@@ -43,6 +46,5 @@ $("document").ready(function(){
 	};
 
 	new Via(views);
-	console.log(views);
 
 });

@@ -2,67 +2,159 @@
 	====== Api.js ======
 	Handles loading the Apis and processing them.
 */
-$("document").ready(function(){
-	//console.log("Api.js linked");
 
-	//Setup Yummly API Call
+var Api  = (function(){
 
-	var yumKey = "1f9b2a7d3efef07d7e62c12ae3fea734";
-	var yumAppId = "5b89dde2";
+	// ====== Private Varaibles ======
+	var userSearch;
+	var userFilters = ["393^Gluten-Free"];
+	var ref;	
+
+	// ====== Yummly API Information ======
+
+	// Yummly API Key
+	var yumKey = "&_app_key=1f9b2a7d3efef07d7e62c12ae3fea734";
+	// Yummly API App ID
+	var yumAppId = "?_app_id=5b89dde2";
+
+	// Yummly Recipe IDs and Varabiables
 	var yumRecipeId = "Cilantro-Lime-Chicken-2049115"
 
+	// Yummy Endpoint URLS
 	//yumURL = "http://api.yummly.com/v1/api/metadata/allergy?_app_id=5b89dde2&_app_key=1f9b2a7d3efef07d7e62c12ae3fea734"
-	var yumURL = "http://api.yummly.com/v1/api/recipes?_app_id=" + yumAppId + "&_app_key=" + yumKey + "&q=chicken&allowedAllergy[]=393^Gluten-Free";
-	var yumGetRec = "http://api.yummly.com/v1/api/recipe/"+ yumRecipeId+"?_app_id=" + yumAppId + "&_app_key=" + yumKey;
 
-	var nutriKey = "629421b1e71e0ed0e48f50e44429795b";
-	var nutriAppId = "c7923083";
-	var nutriObj = {
-		"query":"cilantro lime chicken",
-		"timezone":"US/Eastern"
-	}
+	// Yummly Recipe List Search URL
+	var yumListURL = "http://api.yummly.com/v1/api/recipes" + yumAppId + yumKey + "&q=";
 
-	var nutriURL = "https://trackapi.nutritionix.com/v2/natural/nutrients";
+	// Yummly Recipe Search URL
+	var yumGetRecURL = "http://api.yummly.com/v1/api/recipe/";
 
+	// ====== Recipe-Nutrition-Health API Information ======
+
+	// RHN API Key
 	var recipeKey = "BEAGFpnJzNmshCwrMP5I5LTVCo3qp1L9ydsjsnkqXNYsWX08Dx";
 
-	var recipeURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/extract?forceExtraction=false&url=http%3A%2F%2Fwww.melskitchencafe.com%2Fthe-best-fudgy-brownies%2F";
+	// RHN API Recipe Instruction Search URL
+	var recipeURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/extract?forceExtraction=true&url=";
+
+	// ====== yummlyListBuilder =====
+	/*
+		Takes a search term from the user and passes it into our Yummly API and returns a recipe object
+	*/
+	function yummlyListSearch(search, allergyFilters){
+
+		if(search != ""){
+			var newSearch = yumListURL + search;
+			if(allergyFilters != []){
+				newSearch += "&allowedAllergy[]=" + allergyFilters[0];
+			}
+			$.ajax({
+				url: newSearch,
+				method: "GET"
+			}).done(function(data){
+				console.log(data);
+				var searchDiv = $("<div>");
+
+				searchDiv.html( data.attribution.html +
+					'<p>' + data.criteria.q + '</p>' );
+
+				$("#search").append(searchDiv);
+
+				$.each(data.matches, function(index, value){
+					var recipeItem = $("<li>");
+					recipeItem.attr("id", value.id);
+					recipeItem.addClass("recipe-list");
+					recipeItem.html(
+						'<p>Name: ' + value.recipeName + '</p>' +
+						'<p>Ingredients: ' + value.ingredients.length + '</p>' +
+						'<p>Rating: ' + value.rating + '</p>' +
+						'<p>Total Time: ' + ((value.totalTimeInSeconds / 60 )/ 60 ).toFixed(1) + ' Hours</p>' +
+						'<img src="' + value.imageUrlsBySize[90] + '">');
+					$("#search").append(recipeItem);
+				})
+
+				$(".recipe-list").on("click", function(){
+					yummlyRecipeLookup($(this).attr("id"));
+				});
+
+			});
+		} else {
+			console.log("Alert user input was empty");
+		}
+
+	}
+
+	function yummlyRecipeLookup(id){
+
+			var curRecipe = yumGetRecURL + id + yumAppId + yumKey;
+
+			$.ajax({
+				url: curRecipe,
+				method: "GET"
+			}).done(function(data){
+				rpnInstructionFinder(data.source.sourceRecipeUrl);
+			});
+	}
+
+	function rpnInstructionFinder(url){
+			console.log(url);
+			console.log(encodeURIComponent(url));
+			var curRecipeIns = recipeURL + encodeURIComponent(url);
+
+			$.ajax({
+				url: curRecipeIns,
+				type: "GET",
+		    	headers: {
+			        'Content-Type': 'application/json',
+			        'X-Mashape-Key': recipeKey
+			    }
+			}).done(function(data){
+
+				console.log(data);
+				if(data.instructions != null){
+					$.each(data.extendedIngredients, function(index, value){
+						var div = $("<div>");
+						div.html("<img src='" + value.image + "'>"+
+							"<p>" + value.originalString + "</p>"+
+							"<p>Locationa: " + value.aisle + "</p>");
+						$("#search").append(div);
+					})
+					$("#search").append(data.instructions);
+				} else {
+					$("#search").append("<a href='" + url + "''>Check out this recipe here.</a>" );
+				}
+			})
+	}
+
+	return{
+
+		init: function(){
+				userSearch = "chicken pasta";
+
+				//yummlyListSearch(userSearch,userFilters);
+			
+			
+		}
+	}
+})();
+
+// $("document").ready(function(){
+// 	//console.log("Api.js linked");
+
+// 	//Setup Yummly API Call
 
 	
-	// $.ajax({
-	// 	url: yumURL,
-	// 	method: "GET"
-	// }).done(function(data){
-	// 	console.log(JSON.stringify(data));
-	// });
 
-	// $.ajax({
-	// 	url: recipeURL,
-	// 	type: "GET",
- //    	headers: {
-	//         'Content-Type': 'application/json',
-	//         'X-Mashape-Key': recipeKey
-	//     }
-	// }).done(function(data){
-	// 	console.log(data);
-	// 	console.log(JSON.stringify(data));
-	// 	$.each(data.extendedIngredients, function(index, value){
-	// 		var div = $("<div>");
-	// 		div.html("<img src='" + value.image + "'>"+
-	// 			"<p>" + value.originalString + "</p>"+
-	// 			"<p>Locationa: " + value.aisle + "</p>");
-	// 		$(".container").append(div);
-	// 	})
-	// 	$(".container").append(data.instructions);
-	// })
+	
+
+	
 
 
-	// $.ajax({
-	// 	url: yumGetRec,
-	// 	method: "GET"
-	// }).done(function(data){
-	// 	console.log(JSON.stringify(data));
-	// });
 
 
-});
+
+
+
+
+
+// });
