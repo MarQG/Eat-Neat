@@ -28,7 +28,7 @@ $("document").ready(function(){
 				templateUrl: 'views/home-title.html'
 			}, {
 				selector: "#content",
-				templateUrl: 'views/home-content.html'
+				templateUrl: 'views/login-content.html'
 			}
 		],
 		search: [{
@@ -45,6 +45,14 @@ $("document").ready(function(){
 			}, {
 				selector: "#content",
 				templateUrl: 'views/favorite-content.html'
+			},
+		],
+		settings: [{
+				selector: "#title",
+				templateUrl: 'views/settings-title.html'
+			}, {
+				selector: "#content",
+				templateUrl: 'views/settings-content.html'
 			},
 		],
 
