@@ -15,38 +15,50 @@
   <header>
   <!-- Nav Bar -->
     <nav class="black lighten-2"> <!-- How to add background color -->
-      <div class="container">
         <div class="nav-wrapper">
-          <a href="#" class="brand-logo center-align"><img id="logo" src="assets/images/eat_neat_logo_wht.png"></a>
-          <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <ul class="right hide-on-med-and-down">
-            <!-- via-href refers to view page -->
-              <li><a via-link via-href="home"><i class="material-icons">home</i></a></li>
-              <li><a via-link via-href="search"><i class="material-icons">search</i></a></li>         
-              <li><a via-link via-href="favorites"><i class="material-icons">favorite</i></a></li>
-              <li><a via-link via-href="modules"><i class="material-icons">view_module</i></a></li>
-              <li><a via-link via-href="settings"><i class="material-icons">settings</i></a></li>
-              <li><a via-link via-href="more"><i class="material-icons">more_vert</i></a></li>
-
-          </ul>
-          </ul>
+          <div class="row black lighten-2">
+              <div class="col s8">
+                <a href="#" class="brand-logo center-align"><img id="logo" src="assets/images/eat_neat_logo_wht.png"></a>
+                  <ul id="slide-out" class="side-nav black lighten-2">
+                    <li><div class="user-view"></li>
+                    <li><img src=""></li>
+                    <li><h4 class="center-align" id="username">Jane Smith</h4></li>
+                    <li><div class="divider"></div></li>
+                    <li><a via-link via-href="home"><i class="material-icons wave-effect white-text">home</i><p class="white-text">Home</p></a></li>
+                    <li><a via-link via-href="search"><i class="material-icons wave-effect white-text">search</i><p class="white-text">Search</p></a></li>
+                    <li><a via-link via-href="favorites"><i class="material-icons wave-effect white-text">favorite</i><p class="white-text">Favorite</p></a></li>
+                    <li><a via-link via-href="modules"><i class="material-icons wave-effect white-text">view_module</i><p class="white-text">My Week</p></a></li>
+                    <li><a via-link via-href="settings"><i class="material-icons wave-effect white-text">settings</i><p class="white-text">Settings</p></a></li>
+                  </ul>
+                  </ul>
+                  <a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="material-icons">menu</i></a>
+              </div>
+              <div class="col s4">
+                 <form class="right" id="search-form">
+                  <div class="input-field inline">
+                    <i class="material-icons prefix">search</i>
+                    <input id="user-search" type="text"  placeholder="Search Recipes..."></input> 
+                  </div>                  
+                </form>
+              </div>            
+          </div>    
         </div>
-      </div>
     </nav>
   </header>
+
   <main>     
     <div>
-      <div id = "title" via-views>Should stay hidden</div>
-      <div id = "content" via-views>Should stay hidden</div>
+      <div id="title" via-views></div>
+      <div id="content" via-views></div>
     </div>
   </main>
+
   <footer>
     <div class="footer-copyright">
      <div class="card-panel black lighten-2 white-text center-align">© 2017 FLP Enterprise</div>
    </div>
  </footer>
 
-	
   <!-- Linking JS Files -->
  
   <!-- Added link to the jQuery Library & Materialize -->

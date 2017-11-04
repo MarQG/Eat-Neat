@@ -28,7 +28,7 @@ $("document").ready(function(){
 				templateUrl: 'views/home-title.html'
 			}, {
 				selector: "#content",
-				templateUrl: 'views/login-content.html'
+				templateUrl: 'views/home-content.html'
 			}
 		],
 		search: [{
@@ -62,5 +62,7 @@ $("document").ready(function(){
 	};
 
 	new Via(views);
+
+	$(".button-collapse").sideNav();
 
 });
