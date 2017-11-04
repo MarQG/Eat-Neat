@@ -8,6 +8,22 @@
     flex: 1 0 auto;
   }
 
+  .brand-logo{
+    left:40%;
+    top:-65px;
+    height: auto;
+  }
+
+  #logo{
+    height: 200px;
+    width: 200px;
+  }
+
+  #search-filter{ 
+    padding: 33px;
+    margin: 0 auto;
+  }
+
   .button-area {
   	margin: 0px;
   } 
