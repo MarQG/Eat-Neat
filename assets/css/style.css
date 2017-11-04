@@ -20,8 +20,15 @@
   }
 
   #search-filter{ 
-    padding: 33px;
-    margin: 0 auto;
+    width: 100%;
+    height: 100px;
+  }
+  #search-label{
+    padding-left: 20px;
+  }
+
+  #search-result{
+    height: 100vh;
   }
 
   .button-area {
