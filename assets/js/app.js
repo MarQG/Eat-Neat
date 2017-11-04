@@ -15,8 +15,15 @@ $("document").ready(function(){
 
 
 	var views = {
-		home: [
-			{
+		login: [{
+				selector: "#title",
+				templateUrl: 'views/login-title.html'
+			}, {
+				selector: "#content",
+				templateUrl: 'views/login-content.html'
+			}
+		],
+		home: [{
 				selector: "#title",
 				templateUrl: 'views/home-title.html'
 			}, {
@@ -25,24 +32,24 @@ $("document").ready(function(){
 			}
 		],
 		search: [{
-			selector: "#title",
-			templateUrl: 'views/search-title.html'
-		}, {
-			selector: "#content",
-			templateUrl: 'views/search-content.html'
-		},
+				selector: "#title",
+				templateUrl: 'views/search-title.html'
+			}, {
+				selector: "#content",
+				templateUrl: 'views/search-content.html'
+			},
 		],
 		favorites: [{
-			selector: "#title",
-			templateUrl: 'views/favorite-title.html'
-		}, {
-			selector: "#content",
-			templateUrl: 'views/favorite-content.html'
-		},
+				selector: "#title",
+				templateUrl: 'views/favorite-title.html'
+			}, {
+				selector: "#content",
+				templateUrl: 'views/favorite-content.html'
+			},
 		],
 
 		defaultView: {
-			view: 'home'
+			view: 'login'
 		}
 	};
 
