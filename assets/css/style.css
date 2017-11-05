@@ -31,8 +31,11 @@
     padding-left: 20px;
   }
 
-  #search-result{
-    height: 100vh;
+  #search-results{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .button-area {
@@ -95,28 +98,28 @@
     margin: 0px 10px 0px 10px;
   }
 
-  #dishType {
+  .dishType {
     font-weight: bold;
     color: #039be5;
     margin: 0px;
   }
 
-  #dishPic {
+  .dishPic {
     width: 250px;
-    height: 200px;
+    height: 150px;
   }
 
-  #dishName{
+  .dishName{
     font-weight: bolder;
     margin: 2px 0px 2px 0px;
   }
 
-  #time {
+  .time {
     justify-content: left;
     color: #d4af4e;
   }
 
-  #servings {
+  .servings {
     justify-content: right;
     color: #d4af4e;
 
@@ -127,3 +130,5 @@
     flex-direction: row;
     justify-content: space-around;
   }
+
+
