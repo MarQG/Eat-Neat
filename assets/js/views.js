@@ -39,6 +39,22 @@ var Views  = (function(){
 				templateUrl: 'views/favorite-content.html'
 			},
 		],
+		myweek: [{
+				selector: "#title",
+				templateUrl: 'views/my-week-title.html'
+			}, {
+				selector: "#content",
+				templateUrl: 'views/my-week-content.html'
+			},
+		],
+		grocerylist: [{
+				selector: "#title",
+				templateUrl: 'views/grocery-title.html'
+			}, {
+				selector: "#content",
+				templateUrl: 'views/grocery-content.html'
+			},
+		],
 		settings: [{
 				selector: "#title",
 				templateUrl: 'views/settings-title.html'

@@ -55,10 +55,11 @@
     margin: auto;
   }
   
-  .FBLogin {
+  #login-facebook {
     background-color: #607cb7;
     padding: 10px;
     width: 250px;
+    height: 50px;
     margin: 15px;
   }
 
@@ -67,10 +68,11 @@
     width: 25px;
   }
 
-  .GoogleLogin {
+  #login-google {
     background-color: #dd4b39;
     padding: 10px;
     width: 250px;
+    height: 50px;
     margin: 15px;
   }
 
@@ -91,22 +93,22 @@
   .faveCard {
     width: 250px;
     height: 300px;
-    border: 1px solid grey;
+   /* border: 1px solid grey;*/
     align-content: center;
     margin: 10px;
     flex: 0 0 auto;
   }
 
   .dishDesc {
-    margin: 0px 10px 0px 10px;
+    margin: 15px;
   }
 
   .dishType {
     font-weight: bold;
     color: #039be5;
-    margin: 0px;
   }
 
+/*need?*/
   .dishPic {
     width: 250px;
     height: 150px;
@@ -114,18 +116,14 @@
 
   .dishName{
     font-weight: bolder;
-    margin: 2px 0px 2px 0px;
   }
 
   .time {
-    justify-content: left;
     color: #d4af4e;
   }
 
   .servings {
-    justify-content: right;
     color: #d4af4e;
-
   }
 
   #favorite-list {
@@ -133,5 +131,27 @@
     flex-direction: row;
     justify-content: space-around;
   }
+  #my-week-view {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .my-week-card {
+    padding: 10px;
+    width: 400px;
+  }
+  
+  .day-title {
+    font-weight: bolder;
+  }
+
+  .meal-time {
+    border-bottom: 1px solid black;
+  }
+
+
+
+
 
 
