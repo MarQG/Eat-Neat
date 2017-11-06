@@ -53,28 +53,37 @@ var Api  = (function(){
 				url: newSearch,
 				method: "GET"
 			}).done(function(data){
+
+				ref.push({
+					savedSearchValue: data.criteria.q,
+					savedSearch: data.matches
+				});
 				console.log(data);
 				var searchDiv = $("<div>");
+				searchDiv.addClass("center-align");
+				searchDiv.html( data.attribution.html);
 
-				searchDiv.html( data.attribution.html +
-					'<p>' + data.criteria.q + '</p>' );
+				$("#search-label").text(data.criteria.q)
 
-				$("#search-title").append(searchDiv);
-
+				$("#search-attribution").append(searchDiv);
+				$("#search-results").empty();
 				$.each(data.matches, function(index, value){
-					var recipeItem = $("<li>");
+					var recipeItem = $("<div>");
 					recipeItem.attr("id", value.id);
-					recipeItem.addClass("recipe-list");
+					recipeItem.addClass("recipe-list faveCard");
 					recipeItem.html(
-						'<p>Name: ' + value.recipeName + '</p>' +
-						'<p>Ingredients: ' + value.ingredients.length + '</p>' +
-						'<p>Rating: ' + value.rating + '</p>' +
-						'<p>Total Time: ' + ((value.totalTimeInSeconds / 60 )/ 60 ).toFixed(1) + ' Hours</p>' +
-						'<img src="' + value.imageUrlsBySize[90] + '">');
-					$("#search-title").append(recipeItem);
+							'<div class="dishImg"><img class="dishPic" src="' + value.imageUrlsBySize[90] + '"></div>' +
+							'<div class="dishDesc">' +
+								'<h6 class="dishType">' + value.sourceDisplayName + '</h6>' +
+								'<h6 class="dishName">' + value.recipeName + '</h6>' +
+								'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (value.totalTimeInSeconds / 60 ) + '</a>' +
+								'<a class="servings"><i class="material-icons">people</i>3 servings</a></div>' +
+							'</div>');
+					$("#search-results").append(recipeItem);
 				})
 
 				$(".recipe-list").on("click", function(){
+					window.location = "http://127.0.0.1:8000#home";
 					yummlyRecipeLookup($(this).attr("id"));
 				});
 
@@ -93,6 +102,7 @@ var Api  = (function(){
 				url: curRecipe,
 				method: "GET"
 			}).done(function(data){
+
 				rpnInstructionFinder(data.source.sourceRecipeUrl);
 			});
 	}
@@ -129,21 +139,48 @@ var Api  = (function(){
 	return{
 
 		init: function(){
-				//console.log("ran API");
-				userSearch = "chicken pasta";
+			userSearch = $("#search-form");
 
-				//yummlyListSearch(userSearch,userFilters);
-			
+			ref = firebase.database().ref("/recent-search");
+
+			userSearch.submit(function(){
+				var userSearchVal = $("#user-search").val().trim();
+				yummlyListSearch(userSearchVal,userFilters);
+			});
+
+			// Search Listener. Will load previous search that user entered
+			$("#nav-search").on("click", function(){
+				ref.limitToLast(1).once("child_added", function(data){
+					$("#search-results").empty();
+					$("#search-label").text(data.val().savedSearchValue);
+					$.each(data.val().savedSearch, function(index, value){
+						var recipeItem = $("<div>");
+						recipeItem.attr("id", value.id);
+						recipeItem.addClass("recipe-list faveCard");
+						recipeItem.html(
+								'<div class="dishImg"><img class="dishPic" src="' + value.imageUrlsBySize[90] + '"></div>' +
+								'<div class="dishDesc">' +
+									'<h6 class="dishType">' + value.sourceDisplayName + '</h6>' +
+									'<h6 class="dishName">' + value.recipeName + '</h6>' +
+									'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (value.totalTimeInSeconds / 60 ) + '</a>' +
+									'<a class="servings"><i class="material-icons">people</i>3 servings</a></div>' +
+								'</div>');
+						$("#search-results").append(recipeItem);
+
+
+					});
+
+					$(".recipe-list").on("click", function(){
+						window.location = "http://127.0.0.1:8000#home";
+						yummlyRecipeLookup($(this).attr("id"));
+					});
+				});
+			});
 			
 		}
 	}
 })();
 
-
-// $("document").ready(function(){
-// 	//console.log("Api.js linked");
-
-// 	//Setup Yummly API Call
 
 	
 
