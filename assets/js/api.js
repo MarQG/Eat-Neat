@@ -83,7 +83,7 @@ var Api  = (function(){
 				})
 
 				$(".recipe-list").on("click", function(){
-					window.location = "http://127.0.0.1:8000#home";
+					window.location = "#home";
 					yummlyRecipeLookup($(this).attr("id"));
 				});
 
@@ -149,32 +149,71 @@ var Api  = (function(){
 			});
 
 			// Search Listener. Will load previous search that user entered
-			$("#nav-search").on("click", function(){
-				ref.limitToLast(1).once("child_added", function(data){
-					$("#search-results").empty();
-					$("#search-label").text(data.val().savedSearchValue);
-					$.each(data.val().savedSearch, function(index, value){
-						var recipeItem = $("<div>");
-						recipeItem.attr("id", value.id);
-						recipeItem.addClass("recipe-list faveCard");
-						recipeItem.html(
-								'<div class="dishImg"><img class="dishPic" src="' + value.imageUrlsBySize[90] + '"></div>' +
-								'<div class="dishDesc">' +
-									'<h6 class="dishType">' + value.sourceDisplayName + '</h6>' +
-									'<h6 class="dishName">' + value.recipeName + '</h6>' +
-									'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (value.totalTimeInSeconds / 60 ) + '</a>' +
-									'<a class="servings"><i class="material-icons">people</i>3 servings</a></div>' +
-								'</div>');
-						$("#search-results").append(recipeItem);
+			$(window).on("hashchange", function(){
+				if(location.hash === "#search" && $("#user-search").val() === ""){
+					console.log("Search reloaded");
+					ref.limitToLast(1).once("child_added", function(data){
+						$("#search-results").empty();
+						$("#search-label").text(data.val().savedSearchValue);
+						$.each(data.val().savedSearch, function(index, value){
+							var recipeItem = $("<div>");
+							recipeItem.attr("id", value.id);
+							recipeItem.addClass("recipe-list faveCard");
+							recipeItem.html(
+									'<div class="dishImg"><img class="dishPic" src="' + value.imageUrlsBySize[90] + '"></div>' +
+									'<div class="dishDesc">' +
+										'<h6 class="dishType">' + value.sourceDisplayName + '</h6>' +
+										'<h6 class="dishName">' + value.recipeName + '</h6>' +
+										'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (value.totalTimeInSeconds / 60 ) + '</a>' +
+										'<a class="servings"><i class="material-icons">people</i>3 servings</a></div>' +
+									'</div>');
+							$("#search-results").append(recipeItem);
 
 
+						});
+
+						$(".recipe-list").on("click", function(){
+							window.location = "#home";
+							yummlyRecipeLookup($(this).attr("id"));
+						});
 					});
+					$(".dropdown-button").dropdown();
+				}	
+				
+			});
 
-					$(".recipe-list").on("click", function(){
-						window.location = "http://127.0.0.1:8000#home";
-						yummlyRecipeLookup($(this).attr("id"));
+
+			$(document).ready(function(){
+				if(location.hash === "#search" && $("#user-search").val() === ""){
+					ref.limitToLast(1).once("child_added", function(data){
+						$("#search-results").empty();
+						$("#search-label").text(data.val().savedSearchValue);
+						$.each(data.val().savedSearch, function(index, value){
+							var recipeItem = $("<div>");
+							recipeItem.attr("id", value.id);
+							recipeItem.addClass("recipe-list faveCard");
+							recipeItem.html(
+									'<div class="dishImg"><img class="dishPic" src="' + value.imageUrlsBySize[90] + '"></div>' +
+									'<div class="dishDesc">' +
+										'<h6 class="dishType">' + value.sourceDisplayName + '</h6>' +
+										'<h6 class="dishName">' + value.recipeName + '</h6>' +
+										'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (value.totalTimeInSeconds / 60 ) + '</a>' +
+										'<a class="servings"><i class="material-icons">people</i>3 servings</a></div>' +
+									'</div>');
+							$("#search-results").append(recipeItem);
+
+
+						});
+
+						$(".recipe-list").on("click", function(){
+							window.location = "#home";
+							yummlyRecipeLookup($(this).attr("id"));
+						});
 					});
-				});
+					$(".dropdown-button").dropdown();
+				}
+
+				
 			});
 			
 		}
