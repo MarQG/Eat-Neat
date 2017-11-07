@@ -8,8 +8,8 @@ var Api  = (function(){
 
 	// ====== Private Varaibles ======
 	var userSearch;
-	var userFilters = ["393^Gluten-Free"];
-	var ref;	
+	var ref;
+	var userFilters = ["393^Gluten-Free"];	
 
 	// ====== Yummly API Information ======
 
@@ -43,102 +43,57 @@ var Api  = (function(){
 		Takes a search term from the user and passes it into our Yummly API and returns a recipe object
 	*/
 
-	function loadRecommended(){
+	return{
 
-	}
+		init: function(){
 
-	function pushFavorite(){
+			ref = firebase.database().ref("/recent-search");
+			
+		},
+		yummlyListSearch: function(search, allergyFilters, display){
+			console.log("ran yummyListSearch");
+			if(search != ""){
+				var newSearch = yumListURL + search;
+				if(allergyFilters != []){
+					newSearch += "&allowedAllergy[]=" + allergyFilters[0];
+				}
+				$.ajax({
+					url: newSearch,
+					method: "GET"
+				}).done(function(data){
 
-	}
+					ref.push({
+						savedSearchValue: data.criteria.q,
+						savedSearch: data.matches
+					});
+					console.log(data);
+					var searchDiv = $("<div>");
+					searchDiv.addClass("center-align");
+					searchDiv.html( data.attribution.html);
+					$("#search-attribution").append(searchDiv);
 
-	function displaySearch(data, display){
-		if (location.hash === "#favorites") {
-			var recipeItem = $("<div>");
-			// recipeItem.attr("id", data.id);
-			recipeItem.addClass("recipe-list card medium faveCard hoverable");
-			recipeItem.html(
-					'<div class="card-image"><img src="' + data.val().recipeImage + '">' +
-					'<a class="btn-floating fav-fab waves-effect waves-light red" id="' + data.key + '"><i class="material-icons">add</i></a>' +
-					'</div>' +
-					'<div class="dishDesc">' +
-						'<h6 class="dishType">' + data.val().source.sourceDisplayName + '</h6>' +
-						'<h6 class="dishName">' + data.val().name + '</h6>' +
-						'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + data.val().cookTime + ' </a>' +
-						'<a class="servings"><i class="material-icons">people</i>' + data.val().servings + 'servings</a>' +
-					'</div>');
-			display.append(recipeItem);	
-		}
+					$("#search-results").empty();
+					$("#search-label").text(data.criteria.q)
+					$.each(data.matches, function(index, value){
+						Api.displayCards(value, $("#search-results"));
+					});
 
-		if (location.hash === "#search") {
+					$(".recipe-list").on("click", function(){
+						favRef = firebase.database().ref("/favorites");
 
-			var recipeItem = $("<div>");
-			recipeItem.attr("id", data.id);
-			recipeItem.addClass("recipe-list card medium faveCard hoverable");
-			var imageUrl = "";
-			if(data.hasOwnProperty('imageUrlsBySize')){
-				imageUrl = data.imageUrlsBySize[90];
+						$(this).html('<i class="material-icons">favorite</i>');
+						$(this).off();
+						Materialize.toast("Added to Favorites", 4000);
+
+						Api.yummlyRecipeLookup($(this).attr("id"),favRef);
+
+					});
+				});
 			} else {
-				imageUrl = "assets/images/testdish.jpg"
+				console.log("Alert user input was empty");
 			}
-			recipeItem.html(
-					'<div class="card-image"><img src="' + imageUrl + '">' +
-					'<a class="btn-floating fav-fab waves-effect waves-light red"><i class="material-icons">favorite_border</i></a>' +
-					'</div>' +
-					'<div class="dishDesc">' +
-						'<h6 class="dishType">' + data.sourceDisplayName + '</h6>' +
-						'<h6 class="dishName">' + data.recipeName + '</h6>' +
-						'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (data.totalTimeInSeconds / 60 ) + ' mins </a>' +
-					'</div>');
-			display.append(recipeItem);
-		}
-	}
-
-	function yummlyListSearch(search, allergyFilters, display){
-		console.log("ran yummyListSearch");
-		if(search != ""){
-			var newSearch = yumListURL + search;
-			if(allergyFilters != []){
-				newSearch += "&allowedAllergy[]=" + allergyFilters[0];
-			}
-			$.ajax({
-				url: newSearch,
-				method: "GET"
-			}).done(function(data){
-
-				ref.push({
-					savedSearchValue: data.criteria.q,
-					savedSearch: data.matches
-				});
-				console.log(data);
-				var searchDiv = $("<div>");
-				searchDiv.addClass("center-align");
-				searchDiv.html( data.attribution.html);
-				$("#search-attribution").append(searchDiv);
-
-				$("#search-results").empty();
-				$("#search-label").text(data.criteria.q)
-				$.each(data.matches, function(index, value){
-					displaySearch(value, display);
-				});
-
-				$(".recipe-list").on("click", function(){
-					favRef = firebase.database().ref("/favorites");
-					$(this).html("favorite");
-					$(this).off();
-					Materialize.toast("Added to Favorites", 4000);
-					yummlyRecipeLookup($(this).attr("id"), favRef);
-
-				});
-
-			});
-		} else {
-			console.log("Alert user input was empty");
-		}
-
-	}
-
-	function yummlyRecipeLookup(id, ref){
-
+		},
+		yummlyRecipeLookup: function(id, ref){
 			var curRecipe = yumGetRecURL + id + yumAppId + yumKey;
 
 			$.ajax({
@@ -159,9 +114,8 @@ var Api  = (function(){
 
 				rpnInstructionFinder(data.source.sourceRecipeUrl, key.key);
 			});
-	}
-
-	function rpnInstructionFinder(url, key){
+		},
+		rpnInstructionFinder: function(url, key){
 			console.log(url);
 			console.log(encodeURIComponent(url));
 			var curRecipeIns = recipeURL + encodeURIComponent(url);
@@ -181,79 +135,54 @@ var Api  = (function(){
 						instructions: data.instructions
 					});
 				} else {
-					$("#search-title").append("<a href='" + url + "' target='_blank'>Check out this recipe here.</a>" );
+					currentRef.update({
+						instructions: "<a href='" + url + "' target='_blank'>Check out this recipe here.</a>"
+					});
 				}
-			})
-	}
-
-	return{
-
-		init: function(){
-			userSearch = $("#search-form");
-
-			ref = firebase.database().ref("/recent-search");
-
-			userSearch.submit(function(){
-				var userSearchVal = $("#user-search").val().trim();
-				yummlyListSearch(userSearchVal, userFilters, $("#search-results"));
-				$("#search-bar").show();
 			});
+		},
+		displayCards: function(data, display){
+			if (location.hash === "#favorites") {
+				var recipeItem = $("<div>");
+				// recipeItem.attr("id", data.id);
+				recipeItem.addClass("card medium faveCard hoverable");
+				recipeItem.html(
+						'<div class="card-image"><img src="' + data.val().recipeImage + '">' +
+						'<a class="btn-floating fav-fab waves-effect waves-light red modal-trigger" data-target="add-recipe"><i class="material-icons favorite-list" id="' + data.key + '">add</i></a>' +
+						'</div>' +
+						'<div class="dishDesc">' +
+							'<h6 class="dishType">' + data.val().source.sourceDisplayName + '</h6>' +
+							'<h6 class="dishName">' + data.val().name + '</h6>' +
+							'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + data.val().cookTime + ' </a>' +
+							'<a class="servings"><i class="material-icons">people</i>' + data.val().servings + 'servings</a>' +
+						'</div>');
+				display.append(recipeItem);	
+			}
 
-			// Search Listener. Will load previous search that user entered
-			$(window).on("hashchange", function(){
-				if(location.hash === "#search" && $("#user-search").val() === ""){
-					$("#search-bar").hide();
-					yummlyListSearch("trending", userFilters, $("#search-results"));
+			if (location.hash === "#search") {
 
-					$(".recipe-list").on("click", function(){
-						favRef = firebase.database().ref("/favorites");
-
-						$(this).html("favorite");
-						$(this).off();
-						Materialize.toast("Added to Favorites", 4000);
-
-						yummlyRecipeLookup($(this).attr("id"),favRef);
-
-					});
-					$(".dropdown-button").dropdown();
-				}	
-
-				if(location.hash === "#favorites"){
-
-					var displayFavRef = firebase.database().ref("/favorites");
-					displayFavRef.on("child_added", function(data){
-						console.log(data.key);
-						displaySearch(data, $("#favorite-list"));
-					});
-				};
-			});
-
-
-			$(document).ready(function(){
-				// Search Load
-				if(location.hash === "#search" && $("#user-search").val() === ""){
-					$("#search-bar").hide();
-					yummlyListSearch("trending", userFilters, $("#search-results"));
-
-					$(".recipe-list").on("click", function(){
-						favRef = firebase.database().ref("/favorites");
-
-						$(this).html("favorite");
-						$(this).off();
-						Materialize.toast("Added to Favorites", 4000);
-						//yummlyRecipeLookup($(this).attr("id", favRef);
-
-						yummlyRecipeLookup($(this).attr("id"), favRef);
-
-					});
-					$(".dropdown-button").dropdown();
-
+				var recipeItem = $("<div>");
+				recipeItem.attr("id", data.id);
+				recipeItem.addClass("card medium faveCard hoverable");
+				var imageUrl = "";
+				if(data.hasOwnProperty('imageUrlsBySize')){
+					imageUrl = data.imageUrlsBySize[90];
+				} else {
+					imageUrl = "assets/images/testdish.jpg"
 				}
-
-				//Favorites Load
-				
-			});
-			
+				recipeItem.html(
+						'<div class="card-image"><img src="' + imageUrl + '">' +
+						'<a class="btn-floating fav-fab waves-effect waves-light red recipe-list"><i class="material-icons">favorite_border</i></a>' +
+						'</div>' +
+						'<div class="dishDesc">' +
+							'<h6 class="dishType">' + data.sourceDisplayName + '</h6>' +
+							'<h6 class="dishName">' + data.recipeName + '</h6>' +
+							'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (data.totalTimeInSeconds / 60 ) + ' mins </a>' +
+						'</div>');
+				display.append(recipeItem);
+			}
 		}
+
+
 	}
 })();
