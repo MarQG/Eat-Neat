@@ -53,11 +53,10 @@ var Api  = (function(){
 
 	function displaySearch(data, display){
 		var recipeItem = $("<div>");
-		recipeItem.attr("id", data.id);
-		recipeItem.addClass("recipe-list card medium faveCard hoverable");
+		recipeItem.addClass("card medium faveCard hoverable");
 		recipeItem.html(
 				'<div class="card-image"><img src="' + data.imageUrlsBySize[90] + '">' +
-				'<a class="btn-floating fav-fab waves-effect waves-light red"><i class="material-icons">favorite_border</i></a>' +
+				'<a class="btn-floating fav-fab waves-effect waves-light red" id="' + data.id + '"><i class="material-icons recipe-list">favorite_border</i></a>' +
 				'</div>' +
 				'<div class="dishDesc">' +
 					'<h6 class="dishType">' + data.sourceDisplayName + '</h6>' +
@@ -96,8 +95,11 @@ var Api  = (function(){
 				});
 
 				$(".recipe-list").on("click", function(){
-					window.location = "#";
-					yummlyRecipeLookup($(this).attr("id"));
+					favRef = firebase.database().ref("/favorites");
+					$(this).html("favorite");
+					$(this).off();
+					Materialize.toast("Added to Favorites", 4000);
+					//yummlyRecipeLookup($(this).attr("id"), favRef);
 				});
 
 			});
@@ -116,7 +118,7 @@ var Api  = (function(){
 				method: "GET"
 			}).done(function(data){
 				// Push Favorite Recipe to database according to Yummyly Recipe API Info
-				ref.push()
+				//ref.push()
 				rpnInstructionFinder(data.source.sourceRecipeUrl);
 			});
 	}
@@ -163,8 +165,11 @@ var Api  = (function(){
 					yummlyListSearch("trending", userFilters, $("#search-results"));
 
 					$(".recipe-list").on("click", function(){
-						window.location = "#home";
-						yummlyRecipeLookup($(this).attr("id"));
+						favRef = firebase.database().ref("/favorites");
+						$(this).html("favorite");
+						$(this).off();
+						Materialize.toast("Added to Favorites", 4000);
+						//yummlyRecipeLookup($(this).attr("id"), favRef);
 					});
 					$(".dropdown-button").dropdown();
 
@@ -181,7 +186,10 @@ var Api  = (function(){
 
 					$(".recipe-list").on("click", function(){
 						favRef = firebase.database().ref("/favorites");
-						yummlyRecipeLookup($(this).attr("id", favRef);
+						$(this).html("favorite");
+						$(this).off();
+						Materialize.toast("Added to Favorites", 4000);
+						//yummlyRecipeLookup($(this).attr("id", favRef);
 					});
 					$(".dropdown-button").dropdown();
 
