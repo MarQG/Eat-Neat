@@ -52,28 +52,36 @@ var Api  = (function(){
 	}
 
 	function displaySearch(data, display){
-		if (display.id === $("#favorite-list").id) {
+		if (location.hash === "#favorites") {
 			var recipeItem = $("<div>");
 			// recipeItem.attr("id", data.id);
 			recipeItem.addClass("recipe-list card medium faveCard hoverable");
 			recipeItem.html(
-					'<div class="card-image"><img src="' + data.recipeImage + '">' +
-					'<a class="btn-floating fav-fab waves-effect waves-light red"><i class="material-icons">add</i></a>' +
+					'<div class="card-image"><img src="' + data.val().recipeImage + '">' +
+					'<a class="btn-floating fav-fab waves-effect waves-light red" id="' + data.key + '"><i class="material-icons">add</i></a>' +
 					'</div>' +
 					'<div class="dishDesc">' +
-						'<h6 class="dishType">' + data.source.sourceDisplayName + '</h6>' +
-						'<h6 class="dishName">' + data.name + '</h6>' +
-						'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + data.cookTime + ' </a>' +
-						'<a class="servings"><i class="material-icons">people</i>' + data.servings + 'servings</a>' +
+						'<h6 class="dishType">' + data.val().source.sourceDisplayName + '</h6>' +
+						'<h6 class="dishName">' + data.val().name + '</h6>' +
+						'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + data.val().cookTime + ' </a>' +
+						'<a class="servings"><i class="material-icons">people</i>' + data.val().servings + 'servings</a>' +
 					'</div>');
 			display.append(recipeItem);	
-		} else if (display.id === $("#search-results").id) {
+		}
+
+		if (location.hash === "#search") {
 
 			var recipeItem = $("<div>");
 			recipeItem.attr("id", data.id);
 			recipeItem.addClass("recipe-list card medium faveCard hoverable");
+			var imageUrl = "";
+			if(data.hasOwnProperty('imageUrlsBySize')){
+				imageUrl = data.imageUrlsBySize[90];
+			} else {
+				imageUrl = "assets/images/testdish.jpg"
+			}
 			recipeItem.html(
-					'<div class="card-image"><img src="' + data.imageUrlsBySize[90] + '">' +
+					'<div class="card-image"><img src="' + imageUrl + '">' +
 					'<a class="btn-floating fav-fab waves-effect waves-light red"><i class="material-icons">favorite_border</i></a>' +
 					'</div>' +
 					'<div class="dishDesc">' +
@@ -214,7 +222,8 @@ var Api  = (function(){
 
 					var displayFavRef = firebase.database().ref("/favorites");
 					displayFavRef.on("child_added", function(data){
-						displaySearch(data.val(), $("#favorite-list"));
+						console.log(data.key);
+						displaySearch(data, $("#favorite-list"));
 					});
 				};
 			});
