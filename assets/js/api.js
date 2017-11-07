@@ -112,7 +112,7 @@ var Api  = (function(){
 					source: data.source
 				});
 
-				rpnInstructionFinder(data.source.sourceRecipeUrl, key.key);
+				Api.rpnInstructionFinder(data.source.sourceRecipeUrl, key.key);
 			});
 		},
 		rpnInstructionFinder: function(url, key){
@@ -172,7 +172,7 @@ var Api  = (function(){
 				}
 				recipeItem.html(
 						'<div class="card-image"><img src="' + imageUrl + '">' +
-						'<a class="btn-floating fav-fab waves-effect waves-light red recipe-list"><i class="material-icons">favorite_border</i></a>' +
+						'<a class="btn-floating fav-fab waves-effect waves-light red "><i class="recipe-list material-icons" id=' + data.id + '>favorite_border</i></a>' +
 						'</div>' +
 						'<div class="dishDesc">' +
 							'<h6 class="dishType">' + data.sourceDisplayName + '</h6>' +
