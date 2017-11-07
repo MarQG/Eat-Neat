@@ -25,10 +25,10 @@ var Api  = (function(){
 	//yumURL = "http://api.yummly.com/v1/api/metadata/allergy?_app_id=5b89dde2&_app_key=1f9b2a7d3efef07d7e62c12ae3fea734"
 
 	// Yummly Recipe List Search URL
-	var yumListURL = "http://api.yummly.com/v1/api/recipes" + yumAppId + yumKey + "&q=";
+	var yumListURL = "https://api.yummly.com/v1/api/recipes" + yumAppId + yumKey + "&q=";
 
 	// Yummly Recipe Search URL
-	var yumGetRecURL = "http://api.yummly.com/v1/api/recipe/";
+	var yumGetRecURL = "https://api.yummly.com/v1/api/recipe/";
 
 	// ====== Recipe-Nutrition-Health API Information ======
 
