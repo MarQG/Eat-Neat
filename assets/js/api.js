@@ -51,7 +51,6 @@ var Api  = (function(){
 			
 		},
 		yummlyListSearch: function(search, allergyFilters, display){
-			console.log("ran yummyListSearch");
 			if(search != ""){
 				var newSearch = yumListURL + search;
 				if(allergyFilters != []){
@@ -66,7 +65,6 @@ var Api  = (function(){
 						savedSearchValue: data.criteria.q,
 						savedSearch: data.matches
 					});
-					console.log(data);
 					var searchDiv = $("<div>");
 					searchDiv.addClass("center-align");
 					searchDiv.html( data.attribution.html);
@@ -80,17 +78,29 @@ var Api  = (function(){
 
 					$(".recipe-list").on("click", function(){
 						favRef = firebase.database().ref("/favorites");
-
-						$(this).html('<i class="material-icons">favorite</i>');
-						$(this).off();
-						Materialize.toast("Added to Favorites", 4000);
-
-						Api.yummlyRecipeLookup($(this).attr("id"),favRef);
-
+						var searchId = $(this).attr("id");
+						var isFav = false;
+						favRef.orderByValue().once("value", function(data){
+							data.forEach(function(child){
+								if(child.val().id === searchId){
+									isFav = true;
+									favRef.child(child.key).remove();
+									$("#" + searchId).text("favorite_border");
+									Materialize.toast("Removed from Favorites", 4000);
+								}
+							});
+						}).then(function(data){
+							if(!isFav){
+								$("#" + searchId).text("favorite");
+								$(this).text("favorite");
+								Api.yummlyRecipeLookup(searchId, favRef);
+								Materialize.toast("Added to Favorites", 4000);
+							}
+						});
 					});
 				});
 			} else {
-				console.log("Alert user input was empty");
+				Materialize.toast("Sorry Search was empty. Try again", 2000);
 			}
 		},
 		yummlyRecipeLookup: function(id, ref){
@@ -116,8 +126,6 @@ var Api  = (function(){
 			});
 		},
 		rpnInstructionFinder: function(url, key){
-			console.log(url);
-			console.log(encodeURIComponent(url));
 			var curRecipeIns = recipeURL + encodeURIComponent(url);
 			var currentRef = firebase.database().ref("/favorites").child(key);
 
@@ -129,7 +137,6 @@ var Api  = (function(){
 			        'X-Mashape-Key': recipeKey
 			    }
 			}).done(function(data){
-				console.log(data);
 				if(data.instructions != null){
 					currentRef.update({
 						instructions: data.instructions
@@ -160,9 +167,8 @@ var Api  = (function(){
 			}
 
 			if (location.hash === "#search") {
-
+				var favRef = firebase.database().ref("/favorites");
 				var recipeItem = $("<div>");
-				recipeItem.attr("id", data.id);
 				recipeItem.addClass("card medium faveCard hoverable");
 				var imageUrl = "";
 				if(data.hasOwnProperty('imageUrlsBySize')){
@@ -170,16 +176,20 @@ var Api  = (function(){
 				} else {
 					imageUrl = "assets/images/testdish.jpg"
 				}
+
 				recipeItem.html(
-						'<div class="card-image"><img src="' + imageUrl + '">' +
-						'<a class="btn-floating fav-fab waves-effect waves-light red "><i class="recipe-list material-icons" id=' + data.id + '>favorite_border</i></a>' +
-						'</div>' +
-						'<div class="dishDesc">' +
-							'<h6 class="dishType">' + data.sourceDisplayName + '</h6>' +
-							'<h6 class="dishName">' + data.recipeName + '</h6>' +
-							'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (data.totalTimeInSeconds / 60 ) + ' mins </a>' +
-						'</div>');
+					'<div class="card-image"><img src="' + imageUrl + '">' +
+					'<a class="btn-floating fav-fab waves-effect waves-light red "><i class="recipe-list material-icons" id=' + data.id + '>favorite_border</i></a>' +
+					'</div>' +
+					'<div class="dishDesc">' +
+						'<h6 class="dishType">' + data.sourceDisplayName + '</h6>' +
+						'<h6 class="dishName">' + data.recipeName + '</h6>' +
+						'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (data.totalTimeInSeconds / 60 ) + ' mins </a>' +
+					'</div>');
 				display.append(recipeItem);
+
+				
+
 			}
 		}
 

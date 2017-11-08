@@ -223,43 +223,8 @@ var Views  = (function(){
 						'</div>');
 					$("#recipe-details").append(newRecipe);
 
-					var groceryRef = firebase.database().ref("/grocerylist");
-					groceryRef.on("value", function(data){
-						console.log("loading grocery list")
-						if(data.val() != null){
-							data.forEach(function(child){
-								if(child.val().recipeName === recipeData.name){
-									console.log("Item exists");
-									$("#recipe-grocery-save").text("Remove Recipe From Grocery List");
-									$("#recipe-grocery-save").off().on("click", function(){
-										groceryRef.child(child.key).remove();
-										$("#recipe-grocery-save").text("Save Recipe To Grocery List");
-										
-									});
-								} else {
-									console.log("Item doesnt exist");
-									$("#recipe-grocery-save").text("Save Recipe To Grocery List");
-									$("#recipe-grocery-save").off().on("click", function(){
-										groceryRef.push({
-											recipeName: recipeData.name,
-											recipeIngredients: recipeData.ingredients
-										});
-									});
-								} 
-							});
-						}else {
-							console.log("Item doesnt exist");
-							$("#recipe-grocery-save").text("Save Recipe To Grocery List");
-							$("#recipe-grocery-save").off().on("click", function(){
-								groceryRef.push({
-									recipeName: recipeData.name,
-									recipeIngredients: recipeData.ingredients
-								});
-		
-							});
-						}
-					});
-
+					
+					addRemoveGroceryListItem(recipeData);
 					
 
 				});
@@ -267,6 +232,41 @@ var Views  = (function(){
 		}else {
 			window.location = "#myweek";
 		}
+	}
+
+	function addRemoveGroceryListItem(recipeToToggle){
+		var groceryRef = firebase.database().ref("/grocerylist");
+		groceryRef.on("value", function(data){
+			if(data.val() != null){
+				data.forEach(function(child){
+					if(child.val().recipeName === recipeToToggle.name){
+						$("#recipe-grocery-save").text("Remove Recipe From Grocery List");
+						$("#recipe-grocery-save").off().on("click", function(){
+							groceryRef.child(child.key).remove();
+							$("#recipe-grocery-save").text("Save Recipe To Grocery List");
+							
+						});
+					} else {
+						$("#recipe-grocery-save").text("Save Recipe To Grocery List");
+						$("#recipe-grocery-save").off().on("click", function(){
+							groceryRef.push({
+								recipeName: recipeToToggle.name,
+								recipeIngredients: recipeToToggle.ingredients
+							});
+						});
+					} 
+				});
+			}else {
+				$("#recipe-grocery-save").text("Save Recipe To Grocery List");
+				$("#recipe-grocery-save").off().on("click", function(){
+					groceryRef.push({
+						recipeName: recipeToToggle.name,
+						recipeIngredients: recipeToToggle.ingredients
+					});
+
+				});
+			}
+		});
 	}
 
 
