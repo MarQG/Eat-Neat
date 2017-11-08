@@ -7,6 +7,11 @@
 var Views  = (function(){
 	var userFilters = ["393^Gluten-Free"];
 	var userSearchVal;
+	
+	var daysSort = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+	var mealTimeSort = ['Breakfast', 'Lunch', 'Dinner'];
+
+	var currentRecipeRef;
 
 	var views = {
 		login: [{
@@ -15,14 +20,6 @@ var Views  = (function(){
 			}, {
 				selector: "#content",
 				templateUrl: 'views/login-content.html'
-			}
-		],
-		home: [{
-				selector: "#title",
-				templateUrl: 'views/home-title.html'
-			}, {
-				selector: "#content",
-				templateUrl: 'views/home-content.html'
 			}
 		],
 		search: [{
@@ -49,6 +46,14 @@ var Views  = (function(){
 				templateUrl: 'views/my-week-content.html'
 			},
 		],
+		recipe: [{
+				selector: "#title",
+				templateUrl: 'views/recipe-title.html'
+			}, {
+				selector: "#content",
+				templateUrl: 'views/recipe-content.html'
+			},
+		],
 		grocerylist: [{
 				selector: "#title",
 				templateUrl: 'views/grocery-title.html'
@@ -57,15 +62,6 @@ var Views  = (function(){
 				templateUrl: 'views/grocery-content.html'
 			},
 		],
-		settings: [{
-				selector: "#title",
-				templateUrl: 'views/settings-title.html'
-			}, {
-				selector: "#content",
-				templateUrl: 'views/settings-content.html'
-			},
-		],
-
 		defaultView: {
 			view: 'login'
 		}
@@ -82,6 +78,26 @@ var Views  = (function(){
 		}
 	}
 
+	function saveRecipeToWeek(id){
+		$("#add-recipe").modal({
+			dismissable:true,
+			ready:function(){
+				$('select').material_select();
+			},
+			complete:function(){
+				var weekday = $("#recipe-weekday option:selected").text();
+				var mealTime = $("#recipe-mealtime option:selected").text();
+				var recipeRef = firebase.database().ref("/myweek/"+ weekday + "/" + mealTime);
+				var favoriteRef = firebase.database().ref("/favorites/" + id)
+				favoriteRef.once("value").then(function(data){
+					recipeRef.set(data.val());
+				});
+
+				Materialize.toast("Added Recipe to " + weekday + " for " + mealTime, 4000);
+			}
+		});
+	}
+
 	function loadFavorites(){
 		setTimeout(function(){
 			var displayFavRef = firebase.database().ref("/favorites");
@@ -93,27 +109,75 @@ var Views  = (function(){
 		setTimeout(function(){
 			$(".favorite-list").on("click", function(){
 				var recId = $(this).attr("id");
-				console.log(recId);
-				$("#add-recipe").modal({
-					dismissable:true,
-					ready:function(){
-						$('select').material_select();
-					},
-					complete:function(){
-
-						var weekday = $("#recipe-weekday option:selected").text();
-						var mealTime = $("#recipe-mealtime option:selected").text();
-						var recipeRef = firebase.database().ref("/myweek/" + weekday + "/" + mealTime);
-						var favoriteRef = firebase.database().ref("/favorites/" + recId)
-						favoriteRef.once("value").then(function(data){
-							recipeRef.set(data.val());
-						});
-
-						Materialize.toast("Added Recipe to " + weekday + " for " + mealTime, 4000);
-					}
-				});
+				saveRecipeToWeek(recId);
+				
 			});
 		}, 1100);
+	}
+
+	function objSorter(obj, sortKey){
+		const unordered = obj;		
+		const ordered = {};
+
+		Object.keys(unordered).sort(function (a, b) {
+		    return sortKey.indexOf(a) > sortKey.indexOf(b);
+		}).forEach(function(key) {
+		    ordered[key] = unordered[key];
+		});
+
+		return ordered;
+	}
+
+	function weekBuilder(data){
+		var sortedWeek = objSorter(data.val(), daysSort);
+		$.each(sortedWeek, function(key, value){
+			var newDay = $("<div>");
+			var sortedMeals = objSorter(value, mealTimeSort);
+
+			var recipeRef = key;
+
+			newDay.addClass("card my-week-card hoverable grey lighten-2");
+			newDay.append('<div class="day-of-week"><h4 class="day-title">'+ key +'</h4></div>');
+			
+			$.each(sortedMeals, function(key, value){
+				newDay.append(
+					'<div class="meal-time"><p class="meal-title">' + key + '</p></div>'+
+					'<div class="row waves-effect waves-green">'+
+						'<div class="meal-item" id="' + value.id + '" data-weekday="' + recipeRef + '" data-meal="' + key + '">'+
+							'<h5 class="dishName">' + value.name + '</h5>' +
+							'<div class="details">' +
+								'<a class="time"> <i class="material-icons">access_time</i> ' + value.cookTime + '</a>' +
+									'<a class="servings"> <i class="material-icons">people</i> ' + value.servings + ' servings</a>'+
+								'</div>'+
+						'</div>'+
+					'</div');
+			});
+			
+			$("#my-week-view").append(newDay);
+		});
+		$(".meal-item").on("click", function(){
+			currentRecipeRef = $(this).attr("data-weekday") + "/" + $(this).attr("data-meal");
+			window.location = "#recipe";
+		});
+	}
+
+	function loadMyWeek(){
+		setTimeout(function(){
+			$("#my-week-view").empty();
+			var myWeekRef = firebase.database().ref("/myweek");
+			myWeekRef.on("value", function(data){
+				weekBuilder(data);
+			})
+		}, 500);
+
+	}
+
+	function displayRecipe(recipe){
+		console.log(recipe);
+		var ref = firebase.database().ref("/myweek/" + recipe + "/");
+		ref.on("value", function(data){
+			console.log(data.val());
+		});
 	}
 
 
@@ -126,23 +190,22 @@ var Views  = (function(){
 
 			case "#favorites":
 				loadFavorites();
-				
 				break;
 
 			case "#myweek":
-				console.log("myweek");
+				loadMyWeek();
 				break;
 
 			case "#grocerylist":
 				console.log("Grocery List");
 				break;
 
-			case "#recipeDetails":
-				console.log("Recipe Details");
+			case "#recipe":
+				displayRecipe(currentRecipeRef);
 				break;
 
 			default:
-				console.log("Default")
+				console.log("Something Went Wrong on page load");
 				break;
 		}
 	}
@@ -157,8 +220,6 @@ var Views  = (function(){
 				console.log(userSearchVal)
 				windowListener("#search");
 			});
-
-
 
 			$(window).on("hashchange", function(){
 				windowListener(location.hash);
