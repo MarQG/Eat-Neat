@@ -188,7 +188,7 @@ var Views  = (function(){
 	function displayRecipe(recipe){
 		if(recipe != ""){
 			setTimeout(function(){
-				console.log(recipe);
+				$("#recipe-details").empty();
 				var ref = firebase.database().ref("/myweek/" + recipe + "/");
 				ref.on("value", function(data){
 					var recipeData = data.val()
@@ -225,11 +225,56 @@ var Views  = (function(){
 							'<h4>Ingredients</h4>'+
 							'<hr>' +
 							ingredients.html() +
+							'<div class="row recipe-grocery-add">'+
+								'<div class="col s12 recipe-grocery-item">'+
+									'<a class="btn waves-effect waves-blue blue" id="recipe-grocery-save" >Save Ingredients To Grocery List</a>'+
+								'</div>'+
+							'</div>'+
 							'<h4>Preparation</h4>'+
 							'<hr>' +
 							recipeData.instructions +
 						'</div>');
 					$("#recipe-details").append(newRecipe);
+
+					var groceryRef = firebase.database().ref("/grocerylist");
+					groceryRef.on("value", function(data){
+						console.log("loading grocery list")
+						if(data.val() != null){
+							data.forEach(function(child){
+								if(child.val().recipeName === recipeData.name){
+									console.log("Item exists");
+									$("#recipe-grocery-save").text("Remove Recipe From Grocery List");
+									$("#recipe-grocery-save").off().on("click", function(){
+										groceryRef.child(child.key).remove();
+										$("#recipe-grocery-save").text("Save Recipe To Grocery List");
+										
+									});
+								} else {
+									console.log("Item doesnt exist");
+									$("#recipe-grocery-save").text("Save Recipe To Grocery List");
+									$("#recipe-grocery-save").off().on("click", function(){
+										groceryRef.push({
+											recipeName: recipeData.name,
+											recipeIngredients: recipeData.ingredients
+										});
+									});
+								} 
+							});
+						}else {
+							console.log("Item doesnt exist");
+							$("#recipe-grocery-save").text("Save Recipe To Grocery List");
+							$("#recipe-grocery-save").off().on("click", function(){
+								groceryRef.push({
+									recipeName: recipeData.name,
+									recipeIngredients: recipeData.ingredients
+								});
+		
+							});
+						}
+					});
+
+					
+
 				});
 			}, 500);
 		}else {
