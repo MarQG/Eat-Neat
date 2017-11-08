@@ -11,7 +11,7 @@ var Views  = (function(){
 	var daysSort = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 	var mealTimeSort = ['Breakfast', 'Lunch', 'Dinner'];
 
-	var currentRecipeRef;
+	var currentRecipeRef = "";
 
 	var views = {
 		login: [{
@@ -173,11 +173,55 @@ var Views  = (function(){
 	}
 
 	function displayRecipe(recipe){
-		console.log(recipe);
-		var ref = firebase.database().ref("/myweek/" + recipe + "/");
-		ref.on("value", function(data){
-			console.log(data.val());
-		});
+		if(recipe != ""){
+			setTimeout(function(){
+				console.log(recipe);
+				var ref = firebase.database().ref("/myweek/" + recipe + "/");
+				ref.on("value", function(data){
+					var recipeData = data.val()
+					$("#recipe-label").text(recipeData.name);
+					var newRecipe = $("<div>");
+					newRecipe.addClass("row");
+
+					var ingredients = $("<div>");
+					$.each(recipeData.ingredients, function(key, value){
+						ingredients.append('<p class="grey-text">' + value + '</p>');
+					});
+
+					newRecipe.append(
+						'<div class="col m12 l6 card large recipe-card black white-text">' +
+							'<img class="recipe-image"src="' + recipeData.recipeImage + '">'+
+							'<div class="row recipe-details">'+
+								'<div class="col s4 recipe-detail-item">'+
+									'<p class="recipe-time">' + recipeData.cookTime +'</p>'+
+								'</div>'+
+								'<div class="col s4 recipe-detail-item">'+
+									'<p class="recipe-servings">' + recipeData.servings +' person</p>'+
+								'</div>'+
+								'<div class="col s4 recipe-detail-item">'+
+									'<p class="recipe-ingredients">' + recipeData.ingredients.length +' ingredients</p>'+
+								'</div>'+
+							'</div>'+
+							'<div class="row recipe-source">'+
+								'<div class="col s12 recipe-source-item">'+
+									'<a class="recipe-source-url" href="' + recipeData.source.sourceRecipeUrl + '" target="_blank">by ' + recipeData.source.sourceDisplayName +'</a>'+
+								'</div>'+
+							'</div>'+	
+						'</div>' +
+						'<div class="col m12 l6 recipe-instructions grey-text">' +
+							'<h4>Ingredients</h4>'+
+							'<hr>' +
+							ingredients.html() +
+							'<h4>Preparation</h4>'+
+							'<hr>' +
+							recipeData.instructions +
+						'</div>');
+					$("#recipe-details").append(newRecipe);
+				});
+			}, 500);
+		}else {
+			window.location = "#myweek";
+		}
 	}
 
 
