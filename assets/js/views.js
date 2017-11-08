@@ -169,7 +169,20 @@ var Views  = (function(){
 				weekBuilder(data);
 			})
 		}, 500);
+	}
 
+	function groceryListBuilder(){
+		var newGroceryList = $("<div>");
+		newGroceryList.addClass("card recipe-card hoverable grey lighten-2");
+		newGroceryList.append("GroceryListWorks");
+	}
+
+	function loadGroceryList(){
+		$("#grocery-list-view").empty();
+		var groceryListRef = firebase.database().ref("/grocerylist")
+		groceryListRef.on("value", function(data){
+			groceryListBuilder(data);
+		})
 	}
 
 	function displayRecipe(recipe){
@@ -241,7 +254,7 @@ var Views  = (function(){
 				break;
 
 			case "#grocerylist":
-				console.log("Grocery List");
+				loadGroceryList();
 				break;
 
 			case "#recipe":
