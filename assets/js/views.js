@@ -193,11 +193,13 @@ var Views  = (function(){
 	}
 
 	function loadGroceryList(){
-		$("#grocery-list-view").empty();
-		var groceryListRef = firebase.database().ref("/grocerylist")
-		groceryListRef.on("value", function(data){
-			groceryListBuilder(data);
-		})
+		setTimeout(function(){
+			$("#grocery-list-view").empty();
+			var groceryListRef = firebase.database().ref("/grocerylist")
+			groceryListRef.on("value", function(data){
+				groceryListBuilder(data);
+			})
+		}, 500);
 	}
 
 	function displayRecipe(recipe){
@@ -294,6 +296,10 @@ var Views  = (function(){
 		});
 	}
 
+	$(".login").on("click", function(){
+		window.location = "#search";
+	});
+
 	function windowListener(hash){
 		switch(hash){
 
@@ -341,8 +347,6 @@ var Views  = (function(){
 			$(document).ready(function(){
 				windowListener(location.hash);
 			});
-
-
 		}
 	}
 })();
