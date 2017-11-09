@@ -8,11 +8,13 @@ main {
   flex: 1 0 auto;
 }
 
-.brand-logo{
+/*.brand-logo{
   left:40%;
   top:-65px;
   height: auto;
-}
+}*/
+
+.navbar-fixed { z-index: 9999; }
 
 #logo{
   height: 200px;
