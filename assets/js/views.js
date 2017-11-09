@@ -169,7 +169,35 @@ var Views  = (function(){
 				weekBuilder(data);
 			})
 		}, 500);
+	}
 
+	function groceryListBuilder(){
+		$("#grocery-list-view").empty();
+		var myGroceryListRef = firebase.database().ref("/grocerylist");
+		myGroceryListRef.on("child_added", function(data){ 
+			var groceryItem = data.val();
+
+			var shoppingItem = $("<div>");
+			$.each(groceryItem.recipeIngredients, function (key, value){
+				shoppingItem.append('<p class="ingredients">' + value + '</p>')
+			});
+			
+			var newGroceryList = $("<div>");
+			newGroceryList.addClass("card recipe-card hoverable grey lighten-2");
+			newGroceryList.append(
+			  		'<div class="recipe"><h5 class="dishName">' + groceryItem.recipeName  + '</h5>' + shoppingItem.html() +
+					'</div>'
+				);
+		$("#grocery-list-view").append(newGroceryList)
+		});
+	}
+
+	function loadGroceryList(){
+		$("#grocery-list-view").empty();
+		var groceryListRef = firebase.database().ref("/grocerylist")
+		groceryListRef.on("value", function(data){
+			groceryListBuilder(data);
+		})
 	}
 
 	function displayRecipe(recipe){
@@ -225,7 +253,6 @@ var Views  = (function(){
 
 					
 					addRemoveGroceryListItem(recipeData);
-					
 
 				});
 			}, 500);
@@ -286,7 +313,7 @@ var Views  = (function(){
 				break;
 
 			case "#grocerylist":
-				console.log("Grocery List");
+				loadGroceryList();
 				break;
 
 			case "#recipe":
