@@ -38,11 +38,6 @@ var Api  = (function(){
 	// RHN API Recipe Instruction Search URL
 	var recipeURL = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/extract?forceExtraction=true&url=";
 
-	// ====== yummlyListBuilder =====
-	/*
-		Takes a search term from the user and passes it into our Yummly API and returns a recipe object
-	*/
-
 	return{
 
 		init: function(){
@@ -187,12 +182,7 @@ var Api  = (function(){
 						'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + (data.totalTimeInSeconds / 60 ) + ' mins </a>' +
 					'</div>');
 				display.append(recipeItem);
-
-				
-
 			}
 		}
-
-
 	}
 })();

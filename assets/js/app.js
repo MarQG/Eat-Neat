@@ -1,4 +1,8 @@
 /*
+	====== EatNeat ======
+	Version: 0.5a
+	Description:
+
 	====== App.js ======
 	Handles the application loading and processing.
 */
@@ -11,7 +15,6 @@ $("document").ready(function(){
       menuWidth: 300,
       closeOnClick: true 
     });
-
 
 	// ===== Scripts ======
 	Api.init();

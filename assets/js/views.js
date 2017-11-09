@@ -3,7 +3,6 @@
 	Handles loading the views dynamically into a single page
 */
 
-
 var Views  = (function(){
 	var userFilters = ["393^Gluten-Free"];
 	var userSearchVal;
@@ -71,10 +70,11 @@ var Views  = (function(){
 		if( userSearchVal === undefined){
 			$("#search-bar").hide();
 			Api.yummlyListSearch("trending", userFilters, $("#search-results"));
-
+			$('.dropdown-button').dropdown();
 		} else {
 			Api.yummlyListSearch(userSearchVal, userFilters, $("#search-results"));
 			$("#search-bar").show();
+			$('.dropdown-button').dropdown();
 		}
 	}
 
@@ -223,13 +223,11 @@ var Views  = (function(){
 						'</div>');
 					$("#recipe-details").append(newRecipe);
 
-					
 					addRemoveGroceryListItem(recipeData);
 					
-
 				});
 			}, 500);
-		}else {
+		} else {
 			window.location = "#myweek";
 		}
 	}
@@ -268,7 +266,6 @@ var Views  = (function(){
 			}
 		});
 	}
-
 
 	function windowListener(hash){
 		switch(hash){
