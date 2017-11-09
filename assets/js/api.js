@@ -132,7 +132,7 @@ var Api  = (function(){
 			        'X-Mashape-Key': recipeKey
 			    }
 			}).done(function(data){
-				if(data.instructions != null){
+				if(data.instructions != undefined){
 					currentRef.update({
 						instructions: data.instructions
 					});

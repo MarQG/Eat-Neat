@@ -8,15 +8,16 @@ main {
   flex: 1 0 auto;
 }
 
-.brand-logo{
+/*.brand-logo{
   left:40%;
   top:-65px;
   height: auto;
-}
+}*/
+
+.navbar-fixed { z-index: 9999; }
 
 #logo{
-  height: 200px;
-  width: 200px;
+  margin-top: 5px
 }
 
 #search-filter{ 
@@ -172,10 +173,25 @@ main {
   padding: 20px;
 }
 
+.recipe-instructions {
+  overflow: auto;
+  margin: 0px;
+  height: 80.80vh;
+}
+
 .fav-fab{
     position: absolute;
     top: 10px;
     right: 10px;
+}
+
+#recipe-card {
+  padding: 0px;
+  margin: 0px;
+}
+
+#default-image {
+  padding: 0px;
 }
 
 

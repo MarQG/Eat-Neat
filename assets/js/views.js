@@ -219,9 +219,13 @@ var Views  = (function(){
 					});
 
 					newRecipe.append(
-						'<div class="col m12 l6 card large recipe-card black white-text">' +
-							'<img class="recipe-image"src="' + recipeData.recipeImage + '">'+
-							'<div class="row recipe-details">'+
+						'<div id="recipe-card" class="col m12 l6 card black white-text">' +
+							'<div class="row">'+
+								'<div id="default-image" = class="col s12 card-image">'+
+									'<img src="assets/images/recipe-image.jpeg">'+
+								'</div>'+
+							'</div>'+
+							'<div class="row recipe-details card-content">'+
 								'<div class="col s4 recipe-detail-item">'+
 									'<p class="recipe-time">' + recipeData.cookTime +'</p>'+
 								'</div>'+
@@ -232,24 +236,27 @@ var Views  = (function(){
 									'<p class="recipe-ingredients">' + recipeData.ingredients.length +' ingredients</p>'+
 								'</div>'+
 							'</div>'+
-							'<div class="row recipe-source">'+
+							'<div class="row recipe-source card-action">'+
+								'<div class="col s12 recipe-grocery-item">'+
+									'<a class="btn waves-effect waves-blue blue" id="recipe-grocery-save" >Save Ingredients To Grocery List</a>'+
+								'</div>'+
 								'<div class="col s12 recipe-source-item">'+
 									'<a class="recipe-source-url" href="' + recipeData.source.sourceRecipeUrl + '" target="_blank">by ' + recipeData.source.sourceDisplayName +'</a>'+
 								'</div>'+
 							'</div>'+	
 						'</div>' +
-						'<div class="col m12 l6 recipe-instructions grey-text">' +
-							'<h4>Ingredients</h4>'+
-							'<hr>' +
-							ingredients.html() +
-							'<div class="row recipe-grocery-add">'+
-								'<div class="col s12 recipe-grocery-item">'+
-									'<a class="btn waves-effect waves-blue blue" id="recipe-grocery-save" >Save Ingredients To Grocery List</a>'+
+						'<div class="col m12 l6 card recipe-instructions grey-text">' +
+							'<div class="row ">'+
+								'<div class="col s12 card-image recipe-image-item">'+
+									'<img class="recipe-image"src="' + recipeData.recipeImage + '">'+
 								'</div>'+
+								'<h4>Ingredients</h4>'+
+								'<hr>' +
+								ingredients.html() +
+								'<h4>Preparation</h4>'+
+								'<hr>' +
+								recipeData.instructions +
 							'</div>'+
-							'<h4>Preparation</h4>'+
-							'<hr>' +
-							recipeData.instructions +
 						'</div>');
 					$("#recipe-details").append(newRecipe);
 
@@ -296,10 +303,6 @@ var Views  = (function(){
 		});
 	}
 
-	$(".login").on("click", function(){
-		window.location = "#search";
-	});
-
 	function windowListener(hash){
 		switch(hash){
 
@@ -324,7 +327,6 @@ var Views  = (function(){
 				break;
 
 			default:
-				console.log("Something Went Wrong on page load");
 				break;
 		}
 	}
