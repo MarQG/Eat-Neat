@@ -194,4 +194,6 @@ main {
   padding: 0px;
 }
 
-
+#login-btn {
+  margin: auto;
+}
