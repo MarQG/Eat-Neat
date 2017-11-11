@@ -78,6 +78,14 @@ var Views  = (function(){
 		}
 	}
 
+	function loadHomePage(){
+		setTimeout(function(){
+			$(".login").on("click", function(){
+				window.location = "#search";
+			});
+		}, 500);	
+	};
+
 	function saveRecipeToWeek(id){
 		$("#add-recipe").modal({
 			dismissable:true,
@@ -325,6 +333,14 @@ var Views  = (function(){
 
 			case "#recipe":
 				displayRecipe(currentRecipeRef);
+				break;
+
+			case "#login":
+				loadHomePage();
+				break;
+
+			case "#":
+				loadHomePage();
 				break;
 
 			default:
