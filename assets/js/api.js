@@ -71,12 +71,15 @@ var Api  = (function(){
 						Api.displayCards(value, $("#search-results"));
 					});
 
+					// Event Listener for Favorite Button Being Clicked
 					$(".recipe-list").on("click", function(){
 						favRef = firebase.database().ref("/favorites");
 						var searchId = $(this).attr("id");
 						var isFav = false;
 						favRef.orderByValue().once("value", function(data){
 							data.forEach(function(child){
+
+								//Removes Favorited Recipe
 								if(child.val().id === searchId){
 									isFav = true;
 									favRef.child(child.key).remove();
@@ -85,6 +88,8 @@ var Api  = (function(){
 								}
 							});
 						}).then(function(data){
+
+							//Adds Recipe to Favorite
 							if(!isFav){
 								$("#" + searchId).text("favorite");
 								$(this).text("favorite");
@@ -132,7 +137,7 @@ var Api  = (function(){
 			        'X-Mashape-Key': recipeKey
 			    }
 			}).done(function(data){
-				if(data.instructions != null){
+				if(data.instructions != undefined){
 					currentRef.update({
 						instructions: data.instructions
 					});
@@ -162,7 +167,9 @@ var Api  = (function(){
 			}
 
 			if (location.hash === "#search") {
+				// Is this needed...?
 				var favRef = firebase.database().ref("/favorites");
+
 				var recipeItem = $("<div>");
 				recipeItem.addClass("card medium faveCard hoverable");
 				var imageUrl = "";
@@ -171,7 +178,6 @@ var Api  = (function(){
 				} else {
 					imageUrl = "assets/images/testdish.jpg"
 				}
-
 				recipeItem.html(
 					'<div class="card-image"><img src="' + imageUrl + '">' +
 					'<a class="btn-floating fav-fab waves-effect waves-light red "><i class="recipe-list material-icons" id=' + data.id + '>favorite_border</i></a>' +
