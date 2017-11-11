@@ -68,7 +68,6 @@ var Views  = (function(){
 
 	function loadSearch(){
 		if( userSearchVal === undefined){
-			
 			Api.yummlyListSearch("trending", userFilters, $("#search-results"));
 			$('.dropdown-button').dropdown();
 		} else {
@@ -336,7 +335,8 @@ var Views  = (function(){
 			new Via(views);
 
 			var userSearch = $("#search-form");
-			userSearch.submit(function(){
+			userSearch.submit(function(e){
+				e.preventDefault();
 				userSearchVal = $("#user-search").val();
 				console.log(userSearchVal)
 				windowListener("#search");
