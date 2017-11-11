@@ -68,12 +68,11 @@ var Views  = (function(){
 
 	function loadSearch(){
 		if( userSearchVal === undefined){
-			$("#search-bar").hide();
+			
 			Api.yummlyListSearch("trending", userFilters, $("#search-results"));
 			$('.dropdown-button').dropdown();
 		} else {
 			Api.yummlyListSearch(userSearchVal, userFilters, $("#search-results"));
-			$("#search-bar").show();
 			$('.dropdown-button').dropdown();
 		}
 	}
