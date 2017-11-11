@@ -227,10 +227,10 @@ var Views  = (function(){
 							'</div>'+
 							'<div class="row recipe-details card-content">'+
 								'<div class="col s4 recipe-detail-item">'+
-									'<p class="recipe-time">' + recipeData.cookTime +'</p>'+
+									'<p class="recipe-time"><i class="material-icons">access_time</i>' + recipeData.cookTime +'</p>'+
 								'</div>'+
 								'<div class="col s4 recipe-detail-item">'+
-									'<p class="recipe-servings">' + recipeData.servings +' person</p>'+
+									'<p class="recipe-servings"><i class="material-icons">people</i>' + recipeData.servings +' person</p>'+
 								'</div>'+
 								'<div class="col s4 recipe-detail-item">'+
 									'<p class="recipe-ingredients">' + recipeData.ingredients.length +' ingredients</p>'+
@@ -303,6 +303,7 @@ var Views  = (function(){
 		});
 	}
 
+	// Listens for a hash change and loads page content accordingly
 	function windowListener(hash){
 		switch(hash){
 
