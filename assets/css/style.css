@@ -195,5 +195,8 @@ main {
 }
 
 #login-btn {
+  display: block;
   margin: auto;
+  width: 500px;
+  font-size: 25px
 }
