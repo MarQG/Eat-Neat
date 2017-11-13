@@ -30,7 +30,7 @@ var Api  = (function(){
 	// Yummly Recipe Search URL
 	var yumGetRecURL = "https://api.yummly.com/v1/api/recipe/";
 
-	// ====== Recipe-Nutrition-Health API Information ======
+	// ====== Spoonacular API Information ======
 
 	// RHN API Key
 	var recipeKey = "BEAGFpnJzNmshCwrMP5I5LTVCo3qp1L9ydsjsnkqXNYsWX08Dx";

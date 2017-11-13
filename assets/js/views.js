@@ -253,9 +253,6 @@ var Views  = (function(){
 						'</div>' +
 						'<div class="col m12 l6 card recipe-instructions grey-text">' +
 							'<div class="row ">'+
-								// '<div class="col s12 card-image recipe-image-item">'+
-								// 	'<img class="recipe-image"src="' + recipeData.recipeImage + '">'+
-								// '</div>'+
 								'<h4>Ingredients</h4>'+
 								'<hr>' +
 								ingredients.html() +
@@ -354,7 +351,6 @@ var Views  = (function(){
 			userSearch.submit(function(e){
 				e.preventDefault();
 				userSearchVal = $("#user-search").val();
-
 				windowListener("#search");
 			});
 
