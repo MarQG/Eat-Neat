@@ -66,6 +66,7 @@ var Api  = (function(){
 
 					$("#search-results").empty();
 					$("#search-label").text(data.criteria.q)
+					$("#user-search").val("");
 					$.each(data.matches, function(index, value){
 						Api.displayCards(value, $("#search-results"));
 					});
@@ -157,7 +158,7 @@ var Api  = (function(){
 						'<a class="btn-floating fav-fab waves-effect waves-light red modal-trigger" data-target="add-recipe"><i class="material-icons favorite-list" id="' + data.key + '">add</i></a>' +
 						'</div>' +
 						'<div class="dishDesc">' +
-							'<h6 class="dishType">' + data.val().source.sourceDisplayName + '</h6>' +
+							'<h5 class="dishType">' + data.val().source.sourceDisplayName + '</h5>' +
 							'<h6 class="dishName">' + data.val().name + '</h6>' +
 							'<div class="details"><a class="time"><i class="material-icons">access_time</i>' + data.val().cookTime + ' </a>' +
 							'<a class="servings"><i class="material-icons">people</i>' + data.val().servings + 'servings</a>' +
@@ -170,7 +171,6 @@ var Api  = (function(){
 				recipeItem.addClass("card medium faveCard hoverable");
 				var imageUrl = "";
 				if(data.hasOwnProperty('imageUrlsBySize')){
-					console.log("displayCard");
 					imageUrl = data.imageUrlsBySize[90];
 				} else {
 					imageUrl = "assets/images/testdish.jpg"
