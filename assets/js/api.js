@@ -55,7 +55,7 @@ var Api  = (function(){
 					url: newSearch,
 					method: "GET"
 				}).done(function(data){
-					ref.push({
+					ref.set({
 						savedSearchValue: data.criteria.q,
 						savedSearch: data.matches
 					});

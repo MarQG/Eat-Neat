@@ -89,18 +89,21 @@ var Views  = (function(){
 			dismissable:true,
 			ready:function(){
 				$('select').material_select();
-			},
-			complete:function(){
-				var weekday = $("#recipe-weekday option:selected").text();
-				var mealTime = $("#recipe-mealtime option:selected").text();
-				var recipeRef = firebase.database().ref("/myweek/"+ weekday + "/" + mealTime);
-				var favoriteRef = firebase.database().ref("/favorites/" + id)
-				favoriteRef.once("value").then(function(data){
-					recipeRef.set(data.val());
+
+				$("#save-recipe").off().on("click", function(){
+					var weekday = $("#recipe-weekday option:selected").text();
+					var mealTime = $("#recipe-mealtime option:selected").text();
+					var recipeRef = firebase.database().ref("/myweek/"+ weekday + "/" + mealTime);
+					var favoriteRef = firebase.database().ref("/favorites/" + id)
+					favoriteRef.once("value").then(function(data){
+						recipeRef.set(data.val());
+					});
+
+					Materialize.toast("Added Recipe to " + weekday + " for " + mealTime, 4000);
+					$("#add-recipe").modal("close");
 				});
 
-				Materialize.toast("Added Recipe to " + weekday + " for " + mealTime, 4000);
-			}
+			},
 		});
 	}
 
@@ -350,6 +353,7 @@ var Views  = (function(){
 			var userSearch = $("#search-form");
 			userSearch.submit(function(e){
 				e.preventDefault();
+				window.location = "#search";
 				userSearchVal = $("#user-search").val();
 				windowListener("#search");
 			});
