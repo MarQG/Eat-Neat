@@ -8,6 +8,7 @@ main {
   flex: 1 0 auto;
 }
 
+
 /*.brand-logo{
   left:40%;
   top:-65px;
@@ -56,10 +57,16 @@ h4{
 #logo{
   margin-top: 5px
 }
+#search-bar > div{
+  padding: 0;
+}
+
+#search-bar{
+  margin: 0;
+}
 
 #search-filter{ 
   width: 100%;
-  height: 100px;
 }
 #search-label{
   padding-left: 20px;
@@ -236,4 +243,9 @@ h4{
   padding: 0px;
 }
 
-
+#login-btn {
+  display: block;
+  margin: auto;
+  width: 500px;
+  font-size: 25px
+}

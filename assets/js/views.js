@@ -68,15 +68,21 @@ var Views  = (function(){
 
 	function loadSearch(){
 		if( userSearchVal === undefined){
-			$("#search-bar").hide();
 			Api.yummlyListSearch("trending", userFilters, $("#search-results"));
 			$('.dropdown-button').dropdown();
 		} else {
 			Api.yummlyListSearch(userSearchVal, userFilters, $("#search-results"));
-			$("#search-bar").show();
 			$('.dropdown-button').dropdown();
 		}
 	}
+
+	function loadHomePage(){
+		setTimeout(function(){
+			$(".login").on("click", function(){
+				window.location = "#search";
+			});
+		}, 500);	
+	};
 
 	function saveRecipeToWeek(id){
 		$("#add-recipe").modal({
@@ -327,6 +333,14 @@ var Views  = (function(){
 				displayRecipe(currentRecipeRef);
 				break;
 
+			case "#login":
+				loadHomePage();
+				break;
+
+			case "#":
+				loadHomePage();
+				break;
+
 			default:
 				break;
 		}
@@ -337,7 +351,8 @@ var Views  = (function(){
 			new Via(views);
 
 			var userSearch = $("#search-form");
-			userSearch.submit(function(){
+			userSearch.submit(function(e){
+				e.preventDefault();
 				userSearchVal = $("#user-search").val();
 				console.log(userSearchVal)
 				windowListener("#search");

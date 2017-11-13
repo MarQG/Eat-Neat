@@ -55,7 +55,6 @@ var Api  = (function(){
 					url: newSearch,
 					method: "GET"
 				}).done(function(data){
-
 					ref.push({
 						savedSearchValue: data.criteria.q,
 						savedSearch: data.matches
@@ -151,7 +150,7 @@ var Api  = (function(){
 		displayCards: function(data, display){
 			if (location.hash === "#favorites") {
 				var recipeItem = $("<div>");
-				// recipeItem.attr("id", data.id);
+				recipeItem.attr("id", data.id);
 				recipeItem.addClass("card medium faveCard hoverable");
 				recipeItem.html(
 						'<div class="card-image"><img src="' + data.val().recipeImage + '">' +
@@ -167,13 +166,11 @@ var Api  = (function(){
 			}
 
 			if (location.hash === "#search") {
-				// Is this needed...?
-				var favRef = firebase.database().ref("/favorites");
-
 				var recipeItem = $("<div>");
 				recipeItem.addClass("card medium faveCard hoverable");
 				var imageUrl = "";
 				if(data.hasOwnProperty('imageUrlsBySize')){
+					console.log("displayCard");
 					imageUrl = data.imageUrlsBySize[90];
 				} else {
 					imageUrl = "assets/images/testdish.jpg"
