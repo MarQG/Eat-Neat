@@ -66,6 +66,7 @@ var Api  = (function(){
 
 					$("#search-results").empty();
 					$("#search-label").text(data.criteria.q)
+					$("#user-search").val("");
 					$.each(data.matches, function(index, value){
 						Api.displayCards(value, $("#search-results"));
 					});
@@ -170,7 +171,6 @@ var Api  = (function(){
 				recipeItem.addClass("card medium faveCard hoverable");
 				var imageUrl = "";
 				if(data.hasOwnProperty('imageUrlsBySize')){
-					console.log("displayCard");
 					imageUrl = data.imageUrlsBySize[90];
 				} else {
 					imageUrl = "assets/images/testdish.jpg"
