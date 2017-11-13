@@ -150,7 +150,7 @@ var Views  = (function(){
 					'<div class="meal-time"><p class="meal-title">' + key + '</p></div>'+
 					'<div class="row waves-effect waves-green">'+
 						'<div class="meal-item" id="' + value.id + '" data-weekday="' + recipeRef + '" data-meal="' + key + '">'+
-							'<h5 class="dishName">' + value.name + '</h5>' +
+							'<h5 class="dishName">' + value.name + ' <i class="material-icons">launch</i></h5>' +
 							'<div class="details">' +
 								'<a class="time"> <i class="material-icons">access_time</i> ' + value.cookTime + '</a>' +
 									'<a class="servings"> <i class="material-icons">people</i> ' + value.servings + ' servings</a>'+
@@ -228,7 +228,7 @@ var Views  = (function(){
 						'<div id="recipe-card" class="col m12 l6 card black white-text">' +
 							'<div class="row">'+
 								'<div id="default-image" = class="col s12 card-image">'+
-									'<img src="assets/images/recipe-image.jpeg">'+
+									'<img src="' + recipeData.recipeImage + '">'+
 								'</div>'+
 							'</div>'+
 							'<div class="row recipe-details card-content">'+
@@ -253,9 +253,9 @@ var Views  = (function(){
 						'</div>' +
 						'<div class="col m12 l6 card recipe-instructions grey-text">' +
 							'<div class="row ">'+
-								'<div class="col s12 card-image recipe-image-item">'+
-									'<img class="recipe-image"src="' + recipeData.recipeImage + '">'+
-								'</div>'+
+								// '<div class="col s12 card-image recipe-image-item">'+
+								// 	'<img class="recipe-image"src="' + recipeData.recipeImage + '">'+
+								// '</div>'+
 								'<h4>Ingredients</h4>'+
 								'<hr>' +
 								ingredients.html() +
@@ -354,7 +354,7 @@ var Views  = (function(){
 			userSearch.submit(function(e){
 				e.preventDefault();
 				userSearchVal = $("#user-search").val();
-				console.log(userSearchVal)
+
 				windowListener("#search");
 			});
 
