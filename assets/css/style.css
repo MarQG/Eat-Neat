@@ -8,12 +8,12 @@ main {
   flex: 1 0 auto;
 }
 
-
 /*.brand-logo{
   left:40%;
   top:-65px;
   height: auto;
 }*/
+
 p {
   font-family: 'Raleway', sans-serif; 
   font-weight: 500;
@@ -70,6 +70,10 @@ h4{
 }
 #search-label{
   padding-left: 20px;
+}
+
+#search-form, #search-form > div{
+  width:100%;
 }
 
 .results{
@@ -158,7 +162,6 @@ h4{
   font-size: 11px;
 }
 
-/*need?*/
 .dishPic {
   width: 250px;
   height: 150px;
